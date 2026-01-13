@@ -8,7 +8,6 @@ def get_sub_dirs(parent_path):
     files = []
     sub_dirs = []
 
-
     try:
         for x in parent_path.iterdir():
             try:

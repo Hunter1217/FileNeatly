@@ -8,7 +8,7 @@ class MyWidget(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("FileNeatly")
-        self.resize(900, 600)
+        self.resize(900, 700)
 
         central = QWidget(self)
         self.setCentralWidget(central)
@@ -20,7 +20,8 @@ class MyWidget(QMainWindow):
         layout.addWidget(self.tree)
 
         self.tree.setColumnCount(2)
-        self.tree.setHeaderLabels(["Name", "Type"])
+        # self.tree.setHeaderLabels(["Name", "Type"])
+        self.tree.setHeaderLabels(["Name"])
         self.pop_tree()
         # self.tree.show()
         
@@ -37,7 +38,16 @@ class MyWidget(QMainWindow):
     def pop_tree(self):
         self.tree.clear()
 
-        current_dir = get_files.get_home_dir()
+
+# NOTE: I NEED TO MAKE IT RECURSIVELY, somehow, ACESS ALL SUB-DIRECTORIES
+# INSIDE SUB DIRECTORIES SO I CAN ACCESS EVERY FILE AND FOLDER PROBABLY
+# JUST USING IF STATEMENTS TO CHECK FOR THEM AND THEN EITHER CONTINUING
+# OR MAKING IT THE FIRST ITEM IN THE LSIT OF DIRECTORIES TO CHECK
+# USE A DEQUE? SAYS ITS THE MOST OPTIMIZED AND IM WORKING WITH LARGE ITEMS
+
+        current_dir = Path.home() / "OneDrive"
+        # current_dir = Path("C:\Users\hunte\OneDrive")
+        # current_dir = get_files.get_home_dir()
         root = QTreeWidgetItem([current_dir.name])
         self.tree.addTopLevelItem(root)
 
@@ -46,10 +56,11 @@ class MyWidget(QMainWindow):
             dir_item = QTreeWidgetItem([each_dir.name, "Folder"])
             root.addChild(dir_item)
 
-            _, new_files = get_files.get_sub_dirs(each_dir)
+            new_sub_dirs, new_files = get_files.get_sub_dirs(each_dir)
             for f in new_files:
-                ext = f.suffix.upper().lstrip(".")
-                file_item = QTreeWidgetItem([f.name, ext])
+                # ext = f.suffix.upper().lstrip(".")
+                file_item = QTreeWidgetItem([f.name])
+                print(f"File name: {f.name}")
                 dir_item.addChild(file_item)
         
         root.setExpanded(True)
