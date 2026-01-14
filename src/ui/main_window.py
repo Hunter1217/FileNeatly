@@ -66,16 +66,11 @@ class MyWidget(QMainWindow):
     def pop_tree(self):
         self.tree.clear()
 
-
-# NOTE: I NEED TO MAKE IT RECURSIVELY, somehow, ACESS ALL SUB-DIRECTORIES
-# INSIDE SUB DIRECTORIES SO I CAN ACCESS EVERY FILE AND FOLDER PROBABLY
-# JUST USING IF STATEMENTS TO CHECK FOR THEM AND THEN EITHER CONTINUING
-# OR MAKING IT THE FIRST ITEM IN THE LSIT OF DIRECTORIES TO CHECK
-# USE A DEQUE? SAYS ITS THE MOST OPTIMIZED AND IM WORKING WITH LARGE ITEMS
-
         current_dir = Path.home() / "OneDrive"
+
         # current_dir = Path("C:\Users\hunte\OneDrive")
         # current_dir = get_files.get_home_dir()
+
         root = QTreeWidgetItem([current_dir.name])
         self.tree.addTopLevelItem(root)
 
@@ -94,12 +89,9 @@ class MyWidget(QMainWindow):
             if new_sub_dirs:
                 self.pop_branches(new_sub_dirs, root)
 
-            # self.tree.resizeColumnToContents(0)
             for f in new_files:
-                # ext = f.suffix.upper().lstrip(".")
                 file_item = QTreeWidgetItem([f.name])
                 dir_item.addChild(file_item)
-                # self.tree.resizeColumnToContents(0)
         
         root.setExpanded(True)
 

@@ -85,15 +85,6 @@ def main():
     home_dir = get_home_dir()
     change_dirs_loop(home_dir)
     print(f"The Home Directory is {home_dir}")
-    # for name in sub_dirs:
-    #     print(f"Directorys: {name}")
-
-    # for file in files:
-    #     print(f"Files: {file}")
-    #     if file.suffix == ".txt":
-    #         with open(file) as f:
-    #             print(f"This is a line from the file {file}: {f.readline()}")
-
 
 if __name__ == "__main__":
     main()
