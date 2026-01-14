@@ -5,6 +5,10 @@ def get_home_dir():
     return home_dir
 
 def get_sub_dirs(parent_path):
+    print("DEBUG get_sub_dirs type:", type(parent_path), "value:", parent_path)
+
+    # if not isinstance(parent_path, Path):
+    #     raise TypeError(f"get_sub_dirs expected pathlib.Path got {type(parent_path)}")
     files = []
     sub_dirs = []
 
@@ -18,6 +22,9 @@ def get_sub_dirs(parent_path):
             except PermissionError:
                 continue
     except PermissionError:
+        return [], []
+    except Exception as e:
+        print("Exception:" , e)
         return [], []
     return sub_dirs, files
 
