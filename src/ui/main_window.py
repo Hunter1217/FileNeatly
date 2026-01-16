@@ -6,9 +6,9 @@ import services.get_files as get_files
 import random
 
 class MyWidget(QMainWindow):
+
     def __init__(self):
         super().__init__()
-
         self.initUI()
 
     def initUI(self):
@@ -38,63 +38,45 @@ class MyWidget(QMainWindow):
     def get_input(self):
         text, ok = QInputDialog().getText(self, "QInputDialog().getText()",
                                             "Command: ", QLineEdit.Normal)
+        
         if ok and text:
             self.text_edit.setText(text)
 
-    
-    def pop_branches(self, paths, parent_item: QTreeWidgetItem):
+    def pop_branches(self, directory: Path, parent_item: QTreeWidgetItem):
 
-        print("Path:", paths)
+        directory = Path(directory)
+
+
         try:
-            for path in paths:
-                path = Path(path)
-                sub_dirs, sub_files = get_files.get_sub_dirs(path)
+            sub_dirs, sub_files = get_files.get_sub_dirs(directory)
 
-                for sub_dir in sub_dirs:
-                    dir_item = QTreeWidgetItem([sub_dir.name, "Folder"])
-                    parent_item.addChild(dir_item)
-                    sub_dir = Path(sub_dir)
-                    self.pop_branches(sub_dir, dir_item)
+            for sub_dir in sub_dirs:
+                sub_dir = Path(sub_dir)
+                dir_item = QTreeWidgetItem([sub_dir.name, "Folder"])
+                parent_item.addChild(dir_item)
+                
+                self.pop_branches(sub_dir, dir_item)
 
-                for f in sub_files:
-                    file_item = QTreeWidgetItem([f.name])
-                    dir_item.addChild(file_item)
+
+            for f in sub_files:
+                f = Path(f)
+                file_item = QTreeWidgetItem([f.name])
+                dir_item.addChild(file_item)
+
         except Exception as e:
             print("Exception: ", e)
         
-
     def pop_tree(self):
         self.tree.clear()
 
-        current_dir = Path.home() / "OneDrive"
-
-        # current_dir = Path("C:\Users\hunte\OneDrive")
-        # current_dir = get_files.get_home_dir()
-
-        root = QTreeWidgetItem([current_dir.name])
+        # current_dir = Path.home() / "OneDrive"
+        current_dir = Path.home()
+        root = QTreeWidgetItem([current_dir.name, "Folder"])
         self.tree.addTopLevelItem(root)
 
-        current_items = []
+        self.pop_branches(current_dir, root)
 
-        sub_dirs, _ = get_files.get_sub_dirs(current_dir)
-
-        for each_dir in sub_dirs:
-            print(f"Current Directory: {each_dir.name}")
-    
-            dir_item = QTreeWidgetItem([each_dir.name, "Folder"])
-            root.addChild(dir_item)
-
-            new_sub_dirs, new_files = get_files.get_sub_dirs(each_dir)
-
-            if new_sub_dirs:
-                self.pop_branches(new_sub_dirs, root)
-
-            for f in new_files:
-                file_item = QTreeWidgetItem([f.name])
-                dir_item.addChild(file_item)
-        
         root.setExpanded(True)
 
-        
 # key = directory in or other directorys
 # value = files or directorys inside that one
