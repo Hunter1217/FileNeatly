@@ -1,5 +1,5 @@
-import sys
 import random
+import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 from ui.main_window import MyWidget
 
